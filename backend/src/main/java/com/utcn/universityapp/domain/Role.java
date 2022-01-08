@@ -1,5 +1,6 @@
 package com.utcn.universityapp.domain;
 
+import com.utcn.universityapp.domain.user.User;
 import lombok.Data;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
@@ -21,6 +22,6 @@ public class Role {
     private String name;
 
     @OneToMany(mappedBy = "role")
-    private Set<Account> accounts;
+    private Set<User> users;
 
 }

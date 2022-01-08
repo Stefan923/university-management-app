@@ -26,10 +26,6 @@ public class Account {
     @Column(name = "email", nullable = false)
     private String email;
 
-    @ManyToOne
-    @JoinColumn(name = "roleId", nullable = false)
-    private Role role;
-
     @OneToOne
     @MapsId
     @JoinColumn(name = "userId")

@@ -3,6 +3,7 @@ package com.utcn.universityapp.domain.user;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.utcn.universityapp.domain.Account;
 import com.utcn.universityapp.domain.IdentityCard;
+import com.utcn.universityapp.domain.Role;
 import lombok.Data;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
@@ -36,6 +37,10 @@ public class User {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
     private IdentityCard identityCard;
+
+    @ManyToOne
+    @JoinColumn(name = "roleId", nullable = false)
+    private Role role;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
