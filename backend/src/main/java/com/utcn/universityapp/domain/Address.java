@@ -1,12 +1,14 @@
 package com.utcn.universityapp.domain;
 
 import lombok.Data;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
 import javax.persistence.*;
 
 @Data
 @Entity
 @Table(name = "address")
+@EnableAutoConfiguration
 public class Address {
 
     @Id
