@@ -1,35 +1,44 @@
 package com.utcn.universityapp.controller;
 
 import com.utcn.universityapp.domain.Account;
+import com.utcn.universityapp.domain.Attempt;
 import com.utcn.universityapp.domain.user.User;
 import com.utcn.universityapp.dto.*;
 import com.utcn.universityapp.mail.MailSender;
 import com.utcn.universityapp.service.AccountService;
+import com.utcn.universityapp.service.AttemptService;
 import com.utcn.universityapp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
+import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
 public class AccountController {
 
-    public static final String INVALID_SESSION = "INVALID";
+    private static final String INVALID_SESSION = "INVALID";
 
-    public static final String LOGIN_MESSAGE_SUCCESS = "You have logged in successfully.";
-    public static final String LOGIN_MESSAGE_INVALID = "Invalid username or password!";
-    public static final String LOGIN_MESSAGE_LOCKED = "Too many invalid attempts. Your account has been locked!";
-    public static final String LOGIN_MESSAGE_WAITING_APPROVAL = "Your account is waiting for approval.";
+    private static final String LOGIN_MESSAGE_SUCCESS = "You have logged in successfully.";
+    private static final String LOGIN_MESSAGE_INVALID = "Invalid username or password!";
+    private static final String LOGIN_MESSAGE_LOCKED = "Too many invalid attempts. Your account has been locked!";
+    private static final String LOGIN_MESSAGE_WAITING_APPROVAL = "Your account is waiting for approval.";
+    private static final String REGISTER_MESSAGE_FAILED_TO_SEND_EMAIL = "Couldn't send the confirmation mail.";
+
+    private static final int ATTEMPTS_TIME_INTERVAL_HOURS = 24;
+    private static final int MAXIMUM_ATTEMPTS_COUNT = 3;
 
     private final MailSender mailSender = new MailSender();
 
     private AccountService accountService;
+    private AttemptService attemptService;
     private UserService userService;
 
     private PasswordEncoder passwordEncoder;
@@ -41,7 +50,6 @@ public class AccountController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterDetailsDTO registerDetails) {
-        System.out.println(registerDetails);
         RegisterAccountDTO account = registerDetails.getAccount();
         RegisterUserDTO user = registerDetails.getUser();
 
@@ -58,7 +66,7 @@ public class AccountController {
             return new ResponseEntity<>(HttpStatus.IM_USED);
         } catch (MessagingException e) {
             e.printStackTrace();
-            return ResponseEntity.ok("Couldn't send the confirmation mail.");
+            return ResponseEntity.ok(REGISTER_MESSAGE_FAILED_TO_SEND_EMAIL);
         }
     }
 
@@ -86,16 +94,26 @@ public class AccountController {
         try {
             Account account = accountService.getByUsername(username);
 
-            if (!account.getPassword().equals(passwordEncoder.encode(password))) {
+            if (account.isLocked()) {
+                return new LoginResultDTO(false, INVALID_SESSION, LOGIN_MESSAGE_LOCKED);
+            }
+
+            if (!passwordEncoder.matches(password, account.getPassword())) {
+                attemptService.save(new Attempt(username, LocalDateTime.now()));
+
+                if (attemptService.countAttempts(username,
+                        LocalDateTime.now().minusDays(ATTEMPTS_TIME_INTERVAL_HOURS)) >= MAXIMUM_ATTEMPTS_COUNT) {
+                    account.setLocked(true);
+                    accountService.save(account);
+
+                    return new LoginResultDTO(false, INVALID_SESSION, LOGIN_MESSAGE_LOCKED);
+                }
+
                 return new LoginResultDTO(false, INVALID_SESSION, LOGIN_MESSAGE_INVALID);
             }
 
             if (!account.isEnabled()) {
                 return new LoginResultDTO(false, INVALID_SESSION, LOGIN_MESSAGE_WAITING_APPROVAL);
-            }
-
-            if (!account.isLocked()) {
-                return new LoginResultDTO(false, INVALID_SESSION, LOGIN_MESSAGE_LOCKED);
             }
 
             return new LoginResultDTO(true, accountService.createSession(username), LOGIN_MESSAGE_SUCCESS);
@@ -107,6 +125,11 @@ public class AccountController {
     @Autowired
     public void setAccountService(AccountService accountService) {
         this.accountService = accountService;
+    }
+
+    @Autowired
+    public void setAttemptService(AttemptService attemptService) {
+        this.attemptService = attemptService;
     }
 
     @Autowired

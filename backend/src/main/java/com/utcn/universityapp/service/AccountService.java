@@ -20,7 +20,7 @@ public class AccountService {
                 .orElseThrow(NoSuchElementException::new);
     }
 
-    public String createSession(String username) {
+    public String createSession(String username) throws NoSuchElementException {
         Account account = accountRepository.findByUsernameLike(username)
                 .orElseThrow(NoSuchElementException::new);
 
