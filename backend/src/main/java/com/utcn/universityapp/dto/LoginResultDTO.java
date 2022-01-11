@@ -9,9 +9,9 @@ import lombok.ToString;
 @Setter
 @ToString
 @AllArgsConstructor
-public class LoginResponseDTO {
+public class LoginResultDTO {
 
-    private String token;
-    private String username;
+    private boolean success;
+    private String session;
 
 }

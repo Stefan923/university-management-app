@@ -35,6 +35,9 @@ public class Account implements UserDetails {
     @Column(name = "enabled", nullable = false, columnDefinition = "boolean default false")
     private boolean enabled;
 
+    @Column(name = "session")
+    private String session;
+
     @OneToOne
     @MapsId
     @JoinColumn(name = "userId")
