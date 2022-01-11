@@ -20,12 +20,6 @@ public class AccountService {
                 .orElseThrow(NoSuchElementException::new);
     }
 
-    public boolean verifyCredentials(String username, String password) {
-        return accountRepository.findByUsernameLike(username)
-                .orElseThrow(NoSuchElementException::new)
-                .getPassword().equals(password);
-    }
-
     public String createSession(String username) {
         Account account = accountRepository.findByUsernameLike(username)
                 .orElseThrow(NoSuchElementException::new);

@@ -13,5 +13,6 @@ public class LoginResultDTO {
 
     private boolean success;
     private String session;
+    private String message;
 
 }

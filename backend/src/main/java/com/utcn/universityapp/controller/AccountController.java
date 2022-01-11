@@ -22,6 +22,11 @@ public class AccountController {
 
     public static final String INVALID_SESSION = "INVALID";
 
+    public static final String LOGIN_MESSAGE_SUCCESS = "You have logged in successfully.";
+    public static final String LOGIN_MESSAGE_INVALID = "Invalid username or password!";
+    public static final String LOGIN_MESSAGE_LOCKED = "Too many invalid attempts. Your account has been locked!";
+    public static final String LOGIN_MESSAGE_WAITING_APPROVAL = "Your account is waiting for approval.";
+
     private final MailSender mailSender = new MailSender();
 
     private AccountService accountService;
@@ -30,17 +35,8 @@ public class AccountController {
     private PasswordEncoder passwordEncoder;
 
     @GetMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginAccountDTO account) {
-        String username = account.getUsername();
-
-        try {
-            if (accountService.verifyCredentials(username, passwordEncoder.encode(account.getPassword()))) {
-                return ResponseEntity.ok(new LoginResultDTO(true, accountService.createSession(username)));
-            }
-            return ResponseEntity.ok(new LoginResultDTO(false, INVALID_SESSION));
-        } catch (NoSuchElementException ex) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<?> login(@RequestBody LoginAccountDTO credentials) {
+        return ResponseEntity.ok(processAuthentication(credentials.getUsername(), credentials.getPassword()));
     }
 
     @PostMapping("/register")
@@ -84,6 +80,28 @@ public class AccountController {
         account.setPassword(passwordEncoder.encode(registerAccountDTO.getPassword()));
 
         return account;
+    }
+
+    private LoginResultDTO processAuthentication(String username, String password) {
+        try {
+            Account account = accountService.getByUsername(username);
+
+            if (!account.getPassword().equals(passwordEncoder.encode(password))) {
+                return new LoginResultDTO(false, INVALID_SESSION, LOGIN_MESSAGE_INVALID);
+            }
+
+            if (!account.isEnabled()) {
+                return new LoginResultDTO(false, INVALID_SESSION, LOGIN_MESSAGE_WAITING_APPROVAL);
+            }
+
+            if (!account.isLocked()) {
+                return new LoginResultDTO(false, INVALID_SESSION, LOGIN_MESSAGE_LOCKED);
+            }
+
+            return new LoginResultDTO(true, accountService.createSession(username), LOGIN_MESSAGE_SUCCESS);
+        } catch (NoSuchElementException ex) {
+            return new LoginResultDTO(false, INVALID_SESSION, LOGIN_MESSAGE_INVALID);
+        }
     }
 
     @Autowired
