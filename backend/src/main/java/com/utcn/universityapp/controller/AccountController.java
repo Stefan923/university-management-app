@@ -6,6 +6,7 @@ import com.utcn.universityapp.dto.LoginResponseDTO;
 import com.utcn.universityapp.dto.RegisterAccountDTO;
 import com.utcn.universityapp.dto.RegisterDetailsDTO;
 import com.utcn.universityapp.dto.RegisterUserDTO;
+import com.utcn.universityapp.mail.MailSender;
 import com.utcn.universityapp.service.AccountService;
 import com.utcn.universityapp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.security.authentication.LockedException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -29,6 +31,8 @@ public class AccountController {
     private UserService userService;
 
     private PasswordEncoder passwordEncoder;
+
+    private final MailSender mailSender = new MailSender();
 
     @GetMapping("/login")
     public ResponseEntity<?> login(HttpServletRequest request, HttpSession session) {
@@ -51,9 +55,13 @@ public class AccountController {
 
         try {
             accountService.save(newAccount);
+            mailSender.sendEmailConfirmationMail(newAccount.getEmail());
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (DataIntegrityViolationException ex) {
             return new ResponseEntity<>(HttpStatus.IM_USED);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+            return ResponseEntity.ok("Couldn't send the confirmation mail.");
         }
     }
 
