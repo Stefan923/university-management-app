@@ -11,4 +11,6 @@ export const AdminLayoutRoutes: Routes = [
     { path: 'all-users',     component: TableListComponent },
     { path: 'taxes',          component: TaxesComponent },
     { path: 'pending-accounts',  component: NotificationsComponent },
+    { path: 'login', component: LoginComponent },
+    { path: 'logout', component: LogoutComponent },
 ];

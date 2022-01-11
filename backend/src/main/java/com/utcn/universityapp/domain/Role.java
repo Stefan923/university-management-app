@@ -1,12 +1,17 @@
 package com.utcn.universityapp.domain;
 
+import com.utcn.universityapp.domain.user.User;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Set;
 
 @Data
 @Entity
+@AllArgsConstructor
+@RequiredArgsConstructor
 @Table(name = "role")
 public class Role {
 
@@ -19,6 +24,6 @@ public class Role {
     private String name;
 
     @OneToMany(mappedBy = "role")
-    private Set<Account> accounts;
+    private Set<User> users;
 
 }

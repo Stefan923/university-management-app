@@ -15,6 +15,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatSelectModule} from '@angular/material/select';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
+import { LoginComponent } from 'app/login/login.component';
 
 @NgModule({
   imports: [
@@ -36,6 +37,7 @@ import { MatTableModule } from '@angular/material/table';
     TableListComponent,
     TaxesComponent,
     NotificationsComponent,
+    LoginComponent
   ]
 })
 

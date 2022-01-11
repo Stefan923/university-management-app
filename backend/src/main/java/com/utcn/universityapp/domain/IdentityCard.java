@@ -2,12 +2,14 @@ package com.utcn.universityapp.domain;
 
 import com.utcn.universityapp.domain.user.User;
 import lombok.Data;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
 import javax.persistence.*;
 
 @Data
 @Entity
 @Table(name = "identityCard")
+@EnableAutoConfiguration
 public class IdentityCard {
 
     @Id
