@@ -1,16 +1,18 @@
 package com.utcn.universityapp.domain;
 
 import com.utcn.universityapp.domain.user.User;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Set;
 
 @Data
 @Entity
+@AllArgsConstructor
+@RequiredArgsConstructor
 @Table(name = "role")
-@EnableAutoConfiguration
 public class Role {
 
     @Id

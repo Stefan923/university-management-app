@@ -4,16 +4,17 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.utcn.universityapp.domain.Account;
 import com.utcn.universityapp.domain.IdentityCard;
 import com.utcn.universityapp.domain.Role;
-import lombok.Data;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
-@Data
+@Getter
+@Setter
 @Entity
+@AllArgsConstructor
+@RequiredArgsConstructor
 @Table(name = "user")
-@EnableAutoConfiguration
 public class User {
 
     @Id
@@ -38,8 +39,11 @@ public class User {
     @PrimaryKeyJoinColumn
     private IdentityCard identityCard;
 
+    @Column(name = "role_id", nullable = false)
+    private long roleId;
+
     @ManyToOne
-    @JoinColumn(name = "roleId", nullable = false)
+    @JoinColumn(name = "role_id", insertable = false, updatable = false)
     private Role role;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
