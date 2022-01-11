@@ -20,4 +20,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
             @RequestParam("lastName")  String lastName,
             Pageable pageable);
 
+    @RestResource(path = "byRole", rel = "findUserByRole")
+    <S extends User> List<S> findAllByRoleId(
+            @RequestParam("roleId") long roleId,
+            Pageable pageable);
+
 }
