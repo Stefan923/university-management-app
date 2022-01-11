@@ -29,9 +29,6 @@ public class AuthProvider implements AuthenticationProvider {
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        System.out.println("AuthProvider - authenticate");
-        System.out.println(authentication.getName());
-        System.out.println(authentication.getCredentials().toString());
         String username = authentication.getName();
         String password = passwordEncoder.encode(authentication.getCredentials().toString());
 
