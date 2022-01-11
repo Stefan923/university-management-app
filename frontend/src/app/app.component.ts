@@ -14,6 +14,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   loggedIn$: BehaviorSubject<boolean>;
   private isLoggedIn_subscription: Subscription;
+  title = "MSI University";
 
   constructor(
     private authService: AuthService,
