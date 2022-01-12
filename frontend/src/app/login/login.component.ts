@@ -14,6 +14,8 @@ export class LoginComponent implements OnInit {
 
   loginForm: FormGroup;
 
+  login_message: string = "";
+
   processing: Boolean = false;
   error: Boolean = false;
 
@@ -25,7 +27,7 @@ export class LoginComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    if (this.authService.hasToken()) {
+    if (this.authService.isAuthenticated()) {
       this.handleLoginSuccess();
     } else {
       this.initForm();
@@ -51,9 +53,11 @@ export class LoginComponent implements OnInit {
     this.processing = true;
     this.authService.login(this.loginForm.value).then(
       data => {
-        if (data) {
+        if (data && data['success']) {
+          this.login_message = data['message'];
           this.handleLoginSuccess();
         } else {
+          this.login_message = data['message'];
           this.handleLoginError();
         }
       },

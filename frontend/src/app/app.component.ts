@@ -39,7 +39,7 @@ export class AppComponent implements OnInit, OnDestroy {
     );
 
     // check and validate token
-    if (this.authService.hasToken()) {
+    if (this.authService.isAuthenticated()) {
       this.authService.validateTokenOnServer().subscribe(
         (result) => {
           if (!result) {

@@ -54,26 +54,26 @@ describe('AuthService', () => {
     expect(service).toBeTruthy();
   });
 
-  describe('hasToken()' , () => {
-    it('hasToken() should return true when token is set' , () => {
+  describe('isAuthenticated()' , () => {
+    it('isAuthenticated() should return true when token is set' , () => {
       localStorage.clear();
       localStorage.setItem('token' , 'mockToken');
       service.resolveToken();
-      expect(service.hasToken()).toBeTruthy();
+      expect(service.isAuthenticated()).toBeTruthy();
     });
 
-    it('hasToken() should return false when token is not set' , () => {
+    it('getSession() should return false when token is not set' , () => {
       localStorage.clear();
       service.resolveToken();
-      expect(service.hasToken()).toBeFalsy();
+      expect(service.isAuthenticated()).toBeFalsy();
     });
   });
 
-  it('getToken() should return string ' + mockToken , () => {
+  it('getSession() should return string ' + mockToken , () => {
     localStorage.clear();
     localStorage.setItem('token' , mockToken);
     service.resolveToken();
-    expect(service.getToken()).toEqual(mockToken);
+    expect(service.getSession()).toEqual(mockToken);
   });
 
   describe('resolveToken()' , () => {
@@ -97,7 +97,7 @@ describe('AuthService', () => {
 
     it('clearData() should clear token data' , () => {
       service.clearData();
-      expect(service.getToken()).toBeNull();
+      expect(service.getSession()).toBeNull();
     });
 
     it('clearData() should clear local storage' , () => {
@@ -121,10 +121,10 @@ describe('AuthService', () => {
     });
 
 
-    it('getToken() should return token ' + mockToken + ' after login()', () => {
+    it('getSession() should return token ' + mockToken + ' after login()', () => {
       service.login(loginData).then(
         (status) => {
-          expect(service.getToken()).toEqual(mockToken);
+          expect(service.getSession()).toEqual(mockToken);
 
         }
       );
@@ -215,7 +215,7 @@ describe('AuthService', () => {
         (loginStatus) => {
           service.logout().then(
             (logoutStatus) => {
-              expect(service.getToken()).toBeFalsy();
+              expect(service.getSession()).toBeFalsy();
             }
           );
           const req1 = httpMock.expectOne('/api/auth/logout');

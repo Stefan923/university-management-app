@@ -17,7 +17,7 @@ export class TokenIntercept implements HttpInterceptor {
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
         if (request.url.startsWith(environment['apiBaseUrl'] + '/api') ) {
-            const token    = this.authService.getToken();
+            const token    = this.authService.getSession();
             const headers    = {};
 
             if (token !== null) {

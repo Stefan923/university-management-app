@@ -59,19 +59,10 @@ export class AuthService {
   }
 
   async logout() {
-    return this.http.get(environment['apiBaseUrl'] + '/logout').toPromise().then(
-      () => {
+    
         // clear any current data
         this.clearData();
-
-        // tell the rest of the application about the logout
-        this.isLoggedIn.next(false);
-        return true;
-      },
-      (err) => {
-        return false;
-      }
-    );
+        
   }
 
   async login({ username, password }): Promise<any> {
@@ -94,18 +85,20 @@ export class AuthService {
     // this part only gets executed when the promise is resolved
     if (data['success'] === true) {
       this.setDataAfterLogin(data);
+      this.success=true;
       this.isLoggedIn.next(true); // how do I unit test this?
 
-      return true;
+      return data;
     } else {
-      return false;
+      this.success=false;
+      return data;
     }
   }
 
   clearData() {
     this.userData = null;
-    this.session = null;
-    localStorage.clear();
+    this.session = 'INVALID';
+    this.success = false;
   }
 
   getUserData(): UserModel {

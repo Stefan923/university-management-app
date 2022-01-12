@@ -24,7 +24,7 @@
               </div>
 
               <p class="alert alert-danger" role="alert" *ngIf="error">
-                <strong>There was an error!</strong><br>Please check your username/password and try again.
+                <strong>There was an error!</strong><br>{{login_message}}
               </p>
 
               <button id="submitButton" class="btn btn-lg btn-primary btn-block text-uppercase" type="button"
