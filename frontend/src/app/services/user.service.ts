@@ -20,14 +20,14 @@ export class UserService {
   }
 
   getUsersByRoleId(roleId: number, page: number, pageSize: number): Observable<GetResponseUsers> {
-    const url = `${UserService.BASE_URL}/products/search/byRoleId`
-      + `?roleId=${roleId}}&page=${page}&size=${pageSize}`;
+    const url = `${UserService.BASE_URL}/users/search/byRole`
+      + `?roleId=${roleId}&page=${page}&size=${pageSize}`;
 
     return this.httpClient.get<GetResponseUsers>(url);
   }
 
   getUsersByUsername(username: string, page: number, pageSize: number): Observable<GetResponseUsers> {
-    const url = `${UserService.BASE_URL}/products/search/byUsername`
+    const url = `${UserService.BASE_URL}/users/search/byUsername`
       + `?username=${username}}&page=${page}&size=${pageSize}`;
 
     return this.httpClient.get<GetResponseUsers>(url);

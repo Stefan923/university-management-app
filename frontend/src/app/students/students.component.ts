@@ -5,19 +5,8 @@ import { DataSource } from '@angular/cdk/table';
 
 import { MatTableModule } from '@angular/material/table'  ;
 import { Router } from '@angular/router';
-
-
-export interface User {
-  firstName: string;
-  lastName: string;
-  role: string;
-}
-
-const ELEMENT_DATA: User[] = [
-  {firstName: 'Iulia', lastName: 'Stoica', role: 'student'},
-  {firstName: 'Mara', lastName: 'Patac', role: 'student'},
-  {firstName: 'Stefan', lastName: 'Popescu', role: 'teacher'},
-];
+import { GetResponseUsers, UserService } from 'app/services/user.service';
+import { User } from 'app/models/user';
 
 @Component({
   selector: 'students',
@@ -30,6 +19,15 @@ export class StudentsComponent implements OnInit {
   dataSource: MatTableDataSource<any>;
   @ViewChild(MatSort) sort: MatSort;
 
+  private users: User[] = [];
+
+  private number: number = 1;
+  private pageSize: number = 20;
+  private totalElements: number = 0;
+
+  private firstName: string = "";
+  private lastName: string = "";
+
   columnNames = [{
     id: 'firstName',
     value: 'First Name',
@@ -39,22 +37,43 @@ export class StudentsComponent implements OnInit {
     value: 'Last Name',
   },
     {
-      id: 'role',
+      id: 'roleId',
       value: 'Role',
     }
   ];
 
-
-  constructor(private router: Router) { }
+  constructor(private router: Router,
+              private userService: UserService) { }
 
   ngOnInit() {
-    this.displayedColumns = ['firstName', 'lastName', 'role', 'actions'];
-    this.dataSource = new MatTableDataSource(ELEMENT_DATA);
+    this.handleListUsersByRoleId() ;
+    this.displayedColumns = ['firstName', 'lastName', 'roleId', 'actions'];
+    this.dataSource = new MatTableDataSource(this.users);
     this.dataSource.sort = this.sort;
   }
-
   onEdit(){
     this.router.navigate(['/user-profile']);
+  }
+
+  handleListUsersByRoleId() {
+    this.userService.getUsersByRoleId(3, this.number-1, this.pageSize).subscribe(this.processServiceResult());
+    console.log(this.users);
+  }
+
+  setPageSize(pageSize: number) {
+    this.number = 1;
+    this.pageSize = pageSize;
+    this.handleListUsersByRoleId();
+  }
+
+  private processServiceResult() {
+    return (data: GetResponseUsers): void => {
+      this.users = data._embedded.users;
+      this.number = data.page.number + 1;
+      this.pageSize = data.page.size;
+      this.totalElements = data.page.totalElements;
+      this.dataSource = new MatTableDataSource(this.users);
+    }
   }
 
 }
