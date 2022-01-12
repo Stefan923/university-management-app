@@ -13,10 +13,9 @@ export class UserService {
 
   constructor(private httpClient: HttpClient) { }
 
-  getUsersByName(firstName: string, lastName: string, categoryId: number, page: number, pageSize: number): Observable<GetResponseUsers> {
+  getUsersByName(firstName: string, lastName: string, page: number, pageSize: number): Observable<GetResponseUsers> {
     const url = `${UserService.BASE_URL}/users/search/byName`
       + `?firstName=${firstName}&lastName=${lastName}&page=${page}&size=${pageSize}`;
-
     return this.httpClient.get<GetResponseUsers>(url);
   }
 

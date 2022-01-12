@@ -39,16 +39,16 @@ public class AuthConfiguration extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers("/").permitAll()
-                .antMatchers("/login").permitAll()
+                .antMatchers("/login1").permitAll()
                 .antMatchers("/register").permitAll()
                 .and().csrf().disable().formLogin()
-                .loginPage("/login")
+                .loginPage("/login1")
                 .defaultSuccessUrl("/")
                 .usernameParameter("username")
                 .passwordParameter("password")
                 .and().logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                .logoutSuccessUrl("/login").and().exceptionHandling()
+                .logoutSuccessUrl("/login1").and().exceptionHandling()
                 .accessDeniedPage("/access-denied");
     }
 

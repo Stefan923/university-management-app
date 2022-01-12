@@ -18,8 +18,7 @@ export class AuthGuard implements CanActivate {
         // optionally you can also validate the token on the server
         // each time this guard is invoked
         // but that ofcourse could be a lot of calls
-        return true;
-        if (this.authService.hasToken()) {
+        if (this.authService.isAuthenticated()) {
             return true;
         }
 

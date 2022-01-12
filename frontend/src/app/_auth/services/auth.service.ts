@@ -15,7 +15,8 @@ export class AuthService {
   onLogin = new Subject<any>(); // deprecated
   onLogout = new Subject<any>(); // deprecated
 
-  private token: string = null;
+  private success: boolean = false;
+  private session: string = null;
   private userData: UserModel = null;
 
   constructor(
@@ -44,17 +45,17 @@ export class AuthService {
   // if so, set the token in the service
   // and set the login status
   resolveToken(): boolean {
-    this.token = localStorage.getItem('token');
-    this.isLoggedIn.next(this.token ? true : false);
-    return this.token ? true : false;
+    this.session = localStorage.getItem('session');
+    this.isLoggedIn.next(this.session ? true : false);
+    return this.session ? true : false;
   }
 
-  getToken(): string {
-    return this.token;
+  getSession(): string {
+    return this.session;
   }
 
-  hasToken(): boolean {
-    return this.getToken() ? true : false;
+  isAuthenticated(): boolean {
+    return this.success;
   }
 
   async logout() {
@@ -78,30 +79,24 @@ export class AuthService {
     this.clearData();
 
     // create the payload data for the api request
-    const body = new HttpParams()
-      .set('username', username)
-      .set('password', password);
+    const body = {
+      'username': username,
+      'password': password
+    }
 
-    console.log(`Login: ${body}`);
+    console.log(`Login:`, body);
     
-    const data = await this.http.post('http://localhost:8080/login',
-      body.toString(),
-      {
-        headers: new HttpHeaders()
-          .set('Content-Type', 'application/x-www-form-urlencoded')
-      }
-    ).toPromise();
+    const data = await this.http.post('http://localhost:8080/login', body).toPromise();
 
     console.log(`Http Response: `, data);
     
     // chrome.exe --user-data-dir="C://Chrome dev session" --disable-web-security
     // this part only gets executed when the promise is resolved
-    if (data['token'] && data['username']) {
-
+    if (data['success'] === true) {
       this.setDataAfterLogin(data);
       this.isLoggedIn.next(true); // how do I unit test this?
 
-      return data['username'];
+      return true;
     } else {
       return false;
     }
@@ -109,7 +104,7 @@ export class AuthService {
 
   clearData() {
     this.userData = null;
-    this.token = null;
+    this.session = null;
     localStorage.clear();
   }
 
@@ -118,13 +113,13 @@ export class AuthService {
   }
 
   private setDataAfterLogin(data) {
-    this.token = data['token'];
+    this.session = data['session'];
 
     // store some user data in the service
     this.userData = data['user'];
 
     // store some data in local storage (webbrowser)
-    localStorage.setItem('token', this.token);
+    localStorage.setItem('token', this.session);
     localStorage.setItem('usermeta', JSON.stringify(this.userData));
   }
 }
