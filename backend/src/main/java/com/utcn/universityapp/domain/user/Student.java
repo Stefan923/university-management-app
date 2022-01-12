@@ -14,9 +14,8 @@ import java.util.Set;
 public class Student {
 
     @Id
-    @GeneratedValue
     @Column(name = "userId", nullable = false)
-    private long id;
+    private long userId;
 
     @Column(name = "year", nullable = false)
     private int year;
@@ -25,7 +24,6 @@ public class Student {
     private int group;
 
     @OneToOne
-    @MapsId
     @JoinColumn(name = "userId")
     private User user;
 

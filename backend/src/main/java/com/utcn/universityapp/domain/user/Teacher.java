@@ -15,12 +15,10 @@ import java.util.Set;
 public class Teacher {
 
     @Id
-    @GeneratedValue
     @Column(name = "userId", nullable = false)
-    private long id;
+    private long userId;
 
     @OneToOne
-    @MapsId
     @JoinColumn(name = "userId")
     private User user;
 
