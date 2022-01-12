@@ -1,8 +1,8 @@
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NgModule } from '@angular/core';
+import { NgModule ,CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { RouterModule } from '@angular/router';
+import { RouterModule, } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { LogoutComponent } from './logout/logout.component';
 import { AuthGuard } from './_auth/guards/auth.guard';
@@ -35,8 +35,8 @@ import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.compon
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    ComponentsModule,
     RouterModule,
+    ComponentsModule,
     AppRoutingModule,
     ReactiveFormsModule,
     AgmCoreModule.forRoot({
@@ -47,7 +47,8 @@ import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.compon
     AppComponent,
     AdminLayoutComponent,
     LogoutComponent,
-
+    LoginComponent,
+    
   ],
   providers: [{ provide: APP_BASE_HREF, useValue: '/'},
     AuthGuard,

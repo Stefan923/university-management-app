@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { LogoutComponent } from './logout.component';
-import { TestCommonDeclarations, TestCommonImports } from '../_shared/helpers/test.helper';
 
 describe('LogoutComponent', () => {
   let component: LogoutComponent;
@@ -10,10 +9,8 @@ describe('LogoutComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [
-        ...TestCommonDeclarations,
       ],
       imports: [
-        ...TestCommonImports,
         // HttpClientTestingModule,
         // routingModule,
       ],

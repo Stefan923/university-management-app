@@ -6,7 +6,7 @@ import { CheckRequiredField } from '../_shared/helpers/form.helper';
 import { AuthService } from '../_auth/services/auth.service';
 
 @Component({
-  selector: 'app-login',
+  selector: 'login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
@@ -67,7 +67,7 @@ export class LoginComponent implements OnInit {
   private handleLoginSuccess() {
     this.processing = false;
     this.error = false;
-    this.router.navigate(['/dashboard']);
+    this.router.navigate(['/user-profile']);
   }
 
   private handleLoginError() {

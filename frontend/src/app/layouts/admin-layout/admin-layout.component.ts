@@ -6,6 +6,7 @@ import { Router, NavigationEnd, NavigationStart } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import PerfectScrollbar from 'perfect-scrollbar';
 import * as $ from "jquery";
+import { SidebarComponent } from 'app/components/sidebar/sidebar.component';
 
 @Component({
   selector: 'app-admin-layout',
@@ -16,6 +17,7 @@ export class AdminLayoutComponent implements OnInit {
   private _router: Subscription;
   private lastPoppedUrl: string;
   private yScrollStack: number[] = [];
+  user: number=0;
 
   constructor( public location: Location, private router: Router) {}
 

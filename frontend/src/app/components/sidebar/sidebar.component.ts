@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 declare const $: any;
 declare interface RouteInfo {
@@ -6,12 +6,15 @@ declare interface RouteInfo {
     title: string;
     icon: string;
     class: string;
+    type: number;
 }
 export const ROUTES: RouteInfo[] = [
-    { path: '/user-profile', title: 'User Profile',  icon:'person', class: '' },
-    { path: '/all-users', title: 'All Users',  icon:'content_paste', class: '' },
-    { path: '/pending-accounts', title: 'Pending Accounts',  icon:'notifications', class: '' },
-    { path: '/taxes', title: 'Taxes',  icon:'library_books', class: '' },
+    { path: '/user-profile', title: 'User Profile',  icon:'person', class: '' , type:0},
+    { path: '/all-users', title: 'All Users',  icon:'content_paste', class: '',type:0 },
+    { path: '/pending-accounts', title: 'Pending Accounts',  icon:'notifications', class: '',type:1 },
+    { path: '/taxes', title: 'Taxes',  icon:'library_books', class: '',type:1 },
+    { path: '/students', title: 'Students',  icon:'library_books', class: '',type:0 },
+    { path: '/logout', title: 'Log Out',  icon:'', class: '',type:0 },
 ];
 
 @Component({
@@ -19,8 +22,10 @@ export const ROUTES: RouteInfo[] = [
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.css']
 })
+
 export class SidebarComponent implements OnInit {
   menuItems: any[];
+  @Input() user: number;
 
   constructor() { }
 
@@ -33,4 +38,5 @@ export class SidebarComponent implements OnInit {
       }
       return true;
   };
+
 }
