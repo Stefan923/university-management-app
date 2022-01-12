@@ -25,4 +25,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
             @RequestParam("roleId") long roleId,
             Pageable pageable);
 
+    @RestResource(path = "byUsername", rel = "findUserByUsername")
+    <S extends User> List<S> findAllByAccountUsernameContainingIgnoreCase(
+            @RequestParam("username") String username,
+            Pageable pageable);
+
 }
